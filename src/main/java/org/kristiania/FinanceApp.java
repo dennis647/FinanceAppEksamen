@@ -1,17 +1,13 @@
 package org.kristiania;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 class personalInfo {
     private String name;
-    private Date birthday;
-
-    public personalInfo(String name, Date date) {
+    public personalInfo(String name) {
         this.name = name;
-        this.birthday = birthday;
     }
 }
 
@@ -68,6 +64,7 @@ class Expenses {
     }
 }
 
+
 class Savings {
     private double savingsGoal;
     private double currentAmountSaved;
@@ -106,10 +103,7 @@ public class FinanceApp {
         System.out.println("Enter your name");
         String name = scanner.next();
 
-        System.out.println("Enter your birthdate (DD/MM/YYYY)");
-        String birthdate = scanner.next();
-
-        System.out.println("Enter your work income:");
+        System.out.println("Hello " + name + "!\nEnter your work income:");
         double workIncome = scanner.nextDouble();
 
         System.out.println("Enter your freelance income:");
@@ -124,16 +118,21 @@ public class FinanceApp {
 
         Expenses expenses = new Expenses();
 
+        ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
+
         while (true) {
-            System.out.println("Enter an expense category (Food, Rent, Car..) (Type done to break):");
-            String category = scanner.next();
-            if (category.equalsIgnoreCase("done")) break;
+            System.out.println("Enter an expense description (Type done to break):");
+            String description = scanner.next();
+            if (description.equalsIgnoreCase("done")) break;
 
             System.out.println("Enter the expense amount:");
             double amount = scanner.nextDouble();
 
+            String category = categorizationServices.categoryExpenses(description);
+
             expenses.addExpense(category, amount);
         }
+
 
         double totalIncome = income.getTotalIncome();
         double totalExpenses = expenses.getTotalExpenses();
@@ -142,21 +141,20 @@ public class FinanceApp {
         System.out.println("\n--- Financial Helper Application ---");
         System.out.println("Hello, " + name + "!");
         System.out.println("\n--- Summary ---");
-        System.out.println("Total Income: " + totalIncome + " kr");
-        System.out.println("Total Expenses: " + totalExpenses + " kr");
-        System.out.println("Amount Left Each Month: " + leftEachMonth + " kr");
+        System.out.println("Total Income: kr " + totalIncome + ",-");
+        System.out.println("Total Expenses: kr " + totalExpenses + ",-");
+        System.out.println("Amount Left Each Month: kr " + leftEachMonth + ",-");
 
         System.out.println("\n--- Expense Summary ---");
         for (Map.Entry<String, Double> entry : expenses.getCategories().entrySet()) {
-            System.out.println("Category: " + entry.getKey() + ", Total Amount: " + entry.getValue() + " kr");
+            System.out.println("Category: " + entry.getKey() + ", Total Amount: kr " + entry.getValue() + ",-");
         }
 
         System.out.println("\n--- Savings ---");
-        System.out.println("Current Savings: " + savings.getCurrentAmountSaved() + " kr");
-        System.out.println("Savings Goal: " + savings.getSavingsGoal() + " kr");
+        System.out.println("Current Savings: kr " + savings.getCurrentAmountSaved() + ",-");
+        System.out.println("Savings Goal: kr " + savings.getSavingsGoal() + ",-");
 
         System.out.println("\n--- Savings Plan ---");
-
         System.out.println("You have " + leftEachMonth + "kr left after all expenses");
         System.out.println("Enter the amount you want to save each month:");
         double monthlySaving = scanner.nextDouble();
@@ -164,7 +162,7 @@ public class FinanceApp {
         int monthsToReachGoal = savings.monthsToReachGoal(monthlySaving);
 
         if (monthsToReachGoal > 0) {
-            System.out.println("It will take you approximately " + monthsToReachGoal + " months to reach your savings goal.");
+            System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + savingsGoal + ",-");
         } else {
             System.out.println("You won't reach your savings goal with the given savings amount.");
         }
