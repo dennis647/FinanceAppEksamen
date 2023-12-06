@@ -1,5 +1,9 @@
 package org.kristiania;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -32,14 +36,6 @@ class Expense {
     public Expense(String category, double amount){
         this.category = category;
         this.amount = amount;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public String getCategory() {
-        return category;
     }
 }
 
@@ -96,11 +92,31 @@ class Savings {
 
 public class FinanceApp {
     public static void main(String[] args) {
+
+        // Connect to the database
+
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/financedb", "root", "toor");
+
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("select * from users");
+
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("fullname"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        // Scanner for getting all the values and information needed
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Hello! Welcome to your financial helper application! \n");
 
-        System.out.println("Enter your name");
+        System.out.println("Enter your first and last name");
         String name = scanner.next();
 
         System.out.println("Hello " + name + "!\nEnter your work income:");
