@@ -114,9 +114,13 @@ public class FinanceApp {
                 System.out.println("Creating new user...");
                 System.out.println("Enter your first and last name");
                 String newName = scanner.nextLine();
+                System.out.println("Enter your yearly savings goal");
+                double newSavingsGoal = scanner.nextDouble();
 
                 //Add new user to the database
-                statement.executeUpdate("INSERT INTO users (fullname) VALUES ('" + newName + "')");
+                statement.executeUpdate("INSERT INTO users (fullname, savings_goal) VALUES ('" + newName + "' , " + newSavingsGoal + ")");
+
+
 
             } else if (isNewUser.equalsIgnoreCase("no")) {
                 // Display existing users
@@ -133,15 +137,42 @@ public class FinanceApp {
                     e.printStackTrace();
                 }
 
-                // Choose the existing name
+                // Choose the existing user ID
                 System.out.println("Please enter the ID number in front of your name");
                 int selectedUserId = scanner.nextInt();
 
                 // Fetch user details with that name and use it further in the application
                 ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
+
+                // Check if the user has a yearly savings goal set
+                String checkSavingsGoalQuery = "SELECT savings_goal FROM users WHERE user_id = ?";
+                PreparedStatement checkStatement = connection.prepareStatement(checkSavingsGoalQuery);
+                checkStatement.setInt(1, selectedUserId);
+                ResultSet savingsResult = checkStatement.executeQuery();
+
+                if (!savingsResult.next()) {
+                    System.out.println("You haven't set a yearly savings goal yet.");
+                    System.out.println("Set your yearly savings goal now:");
+                    double yearlySavingsGoal = scanner.nextDouble();
+
+                    // Yearly savings isn't set already. Insert yearly goal
+                    String insertSavingsGoalQuery = "INSERT INTO users (user_id, savings_goal) VALUES (?, ?)";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertSavingsGoalQuery);
+                    insertStatement.setInt(1, selectedUserId);
+                    insertStatement.setDouble(2, yearlySavingsGoal);
+                    insertStatement.executeUpdate();
+
+                    System.out.println("Yearly savings goal set successfully!");
+
+                } else {
+
+                    // The user already has a yearly savings goal set
+                    System.out.println("You already have a yearly savings goal set.");
+                }
                 if (userResultSet.next()) {
                     userName = userResultSet.getString("fullname");
                     System.out.println("Welcome back, " + userName + "!");
+
                 } else {
                     System.out.println("User not found");
                 }
@@ -157,6 +188,7 @@ public class FinanceApp {
                         filledMonths.put(filledMonthsResultSet.getInt("month_number"), "Filled in");
                     }
 
+                    // Shows all the months
                     System.out.println("--- Available months ---");
                     for (int i = 1; i <= 12; i++) {
                         String monthName = getMonthName(i);
@@ -217,10 +249,7 @@ public class FinanceApp {
 
             Income income = new Income(workIncome, extraIncome);
 
-            System.out.println("Set your savings goal:");
-            double savingsGoal = scanner.nextDouble();
 
-            Savings savings = new Savings(savingsGoal);
 
             Expenses expenses = new Expenses();
 
@@ -257,18 +286,18 @@ public class FinanceApp {
             }
 
             System.out.println("\n--- Savings ---");
-            System.out.println("Current Savings: kr " + savings.getCurrentAmountSaved() + ",-");
-            System.out.println("Savings Goal: kr " + savings.getSavingsGoal() + ",-");
+            System.out.println("Current Savings: kr " +  ",-"); // Insert how much is currently saved here
+            System.out.println("Savings Goal: kr " +  ",-"); // Insert what the savings goal is
 
             System.out.println("\n--- Savings Plan ---");
             System.out.println("You have " + leftEachMonth + "kr left after all expenses");
             System.out.println("Enter the amount you want to save each month:");
             double monthlySaving = scanner.nextDouble();
 
-            int monthsToReachGoal = savings.monthsToReachGoal(monthlySaving);
+            int monthsToReachGoal = 0;//savings.monthsToReachGoal(monthlySaving); <- Insert how many months to reach savings goal
 
             if (monthsToReachGoal > 0) {
-                System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + savingsGoal + ",-");
+                System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + /* Insert savingsGoal +*/ ",-");
             } else {
                 System.out.println("You won't reach your savings goal with the given savings amount.");
             }
