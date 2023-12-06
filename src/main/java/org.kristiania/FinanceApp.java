@@ -1,9 +1,7 @@
 package org.kristiania;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import javax.xml.transform.Result;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -91,100 +89,131 @@ class Savings {
 
 
 public class FinanceApp {
-    public static void main(String[] args) {
+    private static String Name;
+    public static void main(String[] args) throws SQLException {
 
         // Connect to the database
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/financedb", "root", "toor");
-
             Statement statement = connection.createStatement();
 
-            ResultSet resultSet = statement.executeQuery("select * from users");
+            Scanner scanner = new Scanner(System.in);
 
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("fullname"));
+            // Scanner for getting all the values and information needed
+
+            System.out.println("Hello! Welcome to your financial helper application! \n");
+
+            System.out.println("Are you a new user? (yes/no)");
+            String isNewUser = scanner.nextLine();
+
+            // Create a new user
+            if (isNewUser.equalsIgnoreCase("yes")) {
+                System.out.println("Creating new user...");
+                System.out.println("Enter your first and last name");
+                String newName = scanner.nextLine();
+
+                //Add new user to the database
+                statement.executeUpdate("INSERT INTO users (fullname) VALUES (" + newName + ")");
+
+            } else if (isNewUser.equalsIgnoreCase("no")) {
+                // Display existing users
             }
-        } catch (Exception e) {
+            try {
+
+                ResultSet existingUsers = statement.executeQuery("SELECT * FROM users");
+
+                System.out.println("--- Existing users ---");
+                while (existingUsers.next()) {
+                    System.out.println(existingUsers.getInt("user_id") + " : " + existingUsers.getString("fullname"));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Choose the existing name
+            System.out.println("Please enter the ID number in front of your name");
+            int selectedUserId = scanner.nextInt();
+
+            // Fetch user details with that name and use it further in the application
+            ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
+            if (userResultSet.next()) {
+                String Name = userResultSet.getString("fullname");
+                System.out.println("Welcome back, " + Name + "!");
+            } else {
+                System.out.println("User not found");
+            }
+
+            System.out.println("Please enter your work income:");
+            double workIncome = scanner.nextDouble();
+
+            System.out.println("Enter your freelance income:");
+            double freelanceIncome = scanner.nextDouble();
+
+            Income income = new Income(workIncome, freelanceIncome);
+
+            System.out.println("Set your savings goal:");
+            double savingsGoal = scanner.nextDouble();
+
+            Savings savings = new Savings(savingsGoal);
+
+            Expenses expenses = new Expenses();
+
+            ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
+
+            while (true) {
+                System.out.println("Enter an expense description (Type done to break):");
+                String description = scanner.next();
+                if (description.equalsIgnoreCase("done")) break;
+
+                System.out.println("Enter the expense amount:");
+                double amount = scanner.nextDouble();
+
+                String category = categorizationServices.categoryExpenses(description);
+
+                expenses.addExpense(category, amount);
+            }
+
+
+            double totalIncome = income.getTotalIncome();
+            double totalExpenses = expenses.getTotalExpenses();
+            double leftEachMonth = totalIncome - totalExpenses;
+
+            System.out.println("\n--- Financial Helper Application ---");
+            System.out.println("Hello, " + Name + "!");
+            System.out.println("\n--- Summary ---");
+            System.out.println("Total Income: kr " + totalIncome + ",-");
+            System.out.println("Total Expenses: kr " + totalExpenses + ",-");
+            System.out.println("Amount Left Each Month: kr " + leftEachMonth + ",-");
+
+            System.out.println("\n--- Expense Summary ---");
+            for (Map.Entry<String, Double> entry : expenses.getCategories().entrySet()) {
+                System.out.println("Category: " + entry.getKey() + ", Total Amount: kr " + entry.getValue() + ",-");
+            }
+
+            System.out.println("\n--- Savings ---");
+            System.out.println("Current Savings: kr " + savings.getCurrentAmountSaved() + ",-");
+            System.out.println("Savings Goal: kr " + savings.getSavingsGoal() + ",-");
+
+            System.out.println("\n--- Savings Plan ---");
+            System.out.println("You have " + leftEachMonth + "kr left after all expenses");
+            System.out.println("Enter the amount you want to save each month:");
+            double monthlySaving = scanner.nextDouble();
+
+            int monthsToReachGoal = savings.monthsToReachGoal(monthlySaving);
+
+            if (monthsToReachGoal > 0) {
+                System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + savingsGoal + ",-");
+            } else {
+                System.out.println("You won't reach your savings goal with the given savings amount.");
+            }
+
+            statement.close();
+            connection.close();
+            scanner.close();
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-        // Scanner for getting all the values and information needed
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Hello! Welcome to your financial helper application! \n");
-
-        System.out.println("Enter your first and last name");
-        String name = scanner.next();
-
-        System.out.println("Hello " + name + "!\nEnter your work income:");
-        double workIncome = scanner.nextDouble();
-
-        System.out.println("Enter your freelance income:");
-        double freelanceIncome = scanner.nextDouble();
-
-        Income income = new Income(workIncome, freelanceIncome);
-
-        System.out.println("Set your savings goal:");
-        double savingsGoal = scanner.nextDouble();
-
-        Savings savings = new Savings(savingsGoal);
-
-        Expenses expenses = new Expenses();
-
-        ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
-
-        while (true) {
-            System.out.println("Enter an expense description (Type done to break):");
-            String description = scanner.next();
-            if (description.equalsIgnoreCase("done")) break;
-
-            System.out.println("Enter the expense amount:");
-            double amount = scanner.nextDouble();
-
-            String category = categorizationServices.categoryExpenses(description);
-
-            expenses.addExpense(category, amount);
-        }
-
-
-        double totalIncome = income.getTotalIncome();
-        double totalExpenses = expenses.getTotalExpenses();
-        double leftEachMonth = totalIncome - totalExpenses;
-
-        System.out.println("\n--- Financial Helper Application ---");
-        System.out.println("Hello, " + name + "!");
-        System.out.println("\n--- Summary ---");
-        System.out.println("Total Income: kr " + totalIncome + ",-");
-        System.out.println("Total Expenses: kr " + totalExpenses + ",-");
-        System.out.println("Amount Left Each Month: kr " + leftEachMonth + ",-");
-
-        System.out.println("\n--- Expense Summary ---");
-        for (Map.Entry<String, Double> entry : expenses.getCategories().entrySet()) {
-            System.out.println("Category: " + entry.getKey() + ", Total Amount: kr " + entry.getValue() + ",-");
-        }
-
-        System.out.println("\n--- Savings ---");
-        System.out.println("Current Savings: kr " + savings.getCurrentAmountSaved() + ",-");
-        System.out.println("Savings Goal: kr " + savings.getSavingsGoal() + ",-");
-
-        System.out.println("\n--- Savings Plan ---");
-        System.out.println("You have " + leftEachMonth + "kr left after all expenses");
-        System.out.println("Enter the amount you want to save each month:");
-        double monthlySaving = scanner.nextDouble();
-
-        int monthsToReachGoal = savings.monthsToReachGoal(monthlySaving);
-
-        if (monthsToReachGoal > 0) {
-            System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + savingsGoal + ",-");
-        } else {
-            System.out.println("You won't reach your savings goal with the given savings amount.");
-        }
-
-        scanner.close();
-
-
     }
 }

@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Starting on ExpenseCatagoryService">
+    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Added a working database">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/kristiania/ExpenseCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/ExpenseCategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/kristiania/FinanceApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +58,7 @@
       <updated>1701701160020</updated>
       <workItem from="1701701161397" duration="7493000" />
       <workItem from="1701709630803" duration="5313000" />
-      <workItem from="1701864996208" duration="1090000" />
+      <workItem from="1701864996208" duration="3225000" />
     </task>
     <task id="LOCAL−00001" summary="Added basic layout">
       <created>1701702140321</created>
@@ -85,7 +84,13 @@
       <option name="presentableId" value="LOCAL−00004" />
       <updated>1701708082260</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL−00005" summary="Added a working database">
+      <created>1701866874334</created>
+      <option name="number" value="LOCAL−00005" />
+      <option name="presentableId" value="LOCAL−00005" />
+      <updated>1701866874334</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +112,7 @@
     <MESSAGE value="Added a simple financial application code, starting to add scanner" />
     <MESSAGE value="Simple working application" />
     <MESSAGE value="Starting on ExpenseCatagoryService" />
-    <option name="LAST_COMMIT_MESSAGE" value="Starting on ExpenseCatagoryService" />
+    <MESSAGE value="Added a working database" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a working database" />
   </component>
 </project>
