@@ -157,7 +157,7 @@ public class FinanceApp {
                         filledMonths.put(filledMonthsResultSet.getInt("month_number"), "Filled in");
                     }
 
-                    System.out.println("Available months:");
+                    System.out.println("--- Available months ---");
                     for (int i = 1; i <= 12; i++) {
                         String monthName = getMonthName(i);
                         String status = filledMonths.containsKey(i) ? filledMonths.get(i) : "Not filled in";
@@ -189,21 +189,21 @@ public class FinanceApp {
                         if (rowsAffected > 0) {
                             System.out.println("Income data has successfully been added!");
                         } else {
-                            System.out.println("Failed to add income");
+                            System.out.println("Error: Failed to add income");
                         }
                     } else {
-                        System.out.println("Income data for the selected month already exists.");
+
                         // Display existing income data for the selected month
                         ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber);
                         if (incomeResultSet.next()) {
                             double workIncome = incomeResultSet.getDouble("work_income");
                             double extraIncome = incomeResultSet.getDouble("extra_income");
 
-                            System.out.println("Existing income data for the selected month:");
+                            System.out.println("--- Existing income data for the selected month ---");
                             System.out.println("Work Income: " + workIncome);
                             System.out.println("Extra Income: " + extraIncome);
                         } else {
-                            System.out.println("No income data found for the selected month.");
+                            System.out.println("Error: No income data found for the selected month.");
                         }
                     }
 
@@ -212,7 +212,6 @@ public class FinanceApp {
                     } catch(SQLException e){
                         e.printStackTrace();
                     }
-
             }
 
 
