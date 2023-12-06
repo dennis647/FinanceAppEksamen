@@ -5,13 +5,6 @@ import java.sql.*;
 import java.text.DateFormatSymbols;
 import java.util.*;
 
-class personalInfo {
-    private String name;
-    public personalInfo(String name) {
-        this.name = name;
-    }
-}
-
 class Income {
     private double workIncome;
     private double extraIncome;
@@ -62,23 +55,6 @@ class Savings {
     private double savingsGoal;
     private double currentAmountSaved;
 
-    public Savings(double savingsGoal) {
-        this.savingsGoal = savingsGoal;
-        this.currentAmountSaved = 0.00;
-    }
-
-    public double getCurrentAmountSaved() {
-        return currentAmountSaved;
-    }
-
-    public double getSavingsGoal() {
-        return savingsGoal;
-    }
-
-    public void addToSavings(double amount) {
-        currentAmountSaved += amount;
-    }
-
     public int monthsToReachGoal(double monthlySaved) {
         if (monthlySaved <= 0) return -1;
         double remaining = savingsGoal - currentAmountSaved;
@@ -88,7 +64,6 @@ class Savings {
 
 
 public class FinanceApp {
-
     private static String userName;
     private static double workIncome = 0.0;
     private static double extraIncome = 0.0;
