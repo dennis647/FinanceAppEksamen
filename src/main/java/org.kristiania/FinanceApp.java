@@ -89,7 +89,8 @@ class Savings {
 
 
 public class FinanceApp {
-    private static String Name;
+
+    private static String userName;
     public static void main(String[] args) throws SQLException {
 
         // Connect to the database
@@ -114,11 +115,11 @@ public class FinanceApp {
                 String newName = scanner.nextLine();
 
                 //Add new user to the database
-                statement.executeUpdate("INSERT INTO users (fullname) VALUES (" + newName + ")");
+                statement.executeUpdate("INSERT INTO users (fullname) VALUES ('" + newName + "')");
 
             } else if (isNewUser.equalsIgnoreCase("no")) {
                 // Display existing users
-            }
+
             try {
 
                 ResultSet existingUsers = statement.executeQuery("SELECT * FROM users");
@@ -131,17 +132,18 @@ public class FinanceApp {
                 e.printStackTrace();
             }
 
-            // Choose the existing name
-            System.out.println("Please enter the ID number in front of your name");
-            int selectedUserId = scanner.nextInt();
+                // Choose the existing name
+                System.out.println("Please enter the ID number in front of your name");
+                int selectedUserId = scanner.nextInt();
 
-            // Fetch user details with that name and use it further in the application
-            ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
-            if (userResultSet.next()) {
-                String Name = userResultSet.getString("fullname");
-                System.out.println("Welcome back, " + Name + "!");
-            } else {
-                System.out.println("User not found");
+                // Fetch user details with that name and use it further in the application
+                ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
+                if (userResultSet.next()) {
+                    userName = userResultSet.getString("fullname");
+                    System.out.println("Welcome back, " + userName + "!");
+                } else {
+                    System.out.println("User not found");
+                }
             }
 
             System.out.println("Please enter your work income:");
@@ -180,7 +182,7 @@ public class FinanceApp {
             double leftEachMonth = totalIncome - totalExpenses;
 
             System.out.println("\n--- Financial Helper Application ---");
-            System.out.println("Hello, " + Name + "!");
+            System.out.println("Hello, " + userName + "!");
             System.out.println("\n--- Summary ---");
             System.out.println("Total Income: kr " + totalIncome + ",-");
             System.out.println("Total Expenses: kr " + totalExpenses + ",-");
