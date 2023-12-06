@@ -92,6 +92,7 @@ public class FinanceApp {
     private static String userName;
     private static double workIncome = 0.0;
     private static double extraIncome = 0.0;
+    private static double savingsGoal = 0.0;
     public static void main(String[] args) throws SQLException {
 
         // Connect to the database
@@ -120,11 +121,9 @@ public class FinanceApp {
                 //Add new user to the database
                 statement.executeUpdate("INSERT INTO users (fullname, savings_goal) VALUES ('" + newName + "' , " + newSavingsGoal + ")");
 
-
-
             } else if (isNewUser.equalsIgnoreCase("no")) {
-                // Display existing users
 
+                // Display existing users
                 try {
 
                     ResultSet existingUsers = statement.executeQuery("SELECT * FROM users");
@@ -145,38 +144,31 @@ public class FinanceApp {
                 ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
 
                 // Check if the user has a yearly savings goal set
-                String checkSavingsGoalQuery = "SELECT savings_goal FROM users WHERE user_id = ?";
-                PreparedStatement checkStatement = connection.prepareStatement(checkSavingsGoalQuery);
-                checkStatement.setInt(1, selectedUserId);
-                ResultSet savingsResult = checkStatement.executeQuery();
-
-                if (!savingsResult.next()) {
-                    System.out.println("You haven't set a yearly savings goal yet.");
-                    System.out.println("Set your yearly savings goal now:");
-                    double yearlySavingsGoal = scanner.nextDouble();
-
-                    // Yearly savings isn't set already. Insert yearly goal
-                    String insertSavingsGoalQuery = "INSERT INTO users (user_id, savings_goal) VALUES (?, ?)";
-                    PreparedStatement insertStatement = connection.prepareStatement(insertSavingsGoalQuery);
-                    insertStatement.setInt(1, selectedUserId);
-                    insertStatement.setDouble(2, yearlySavingsGoal);
-                    insertStatement.executeUpdate();
-
-                    System.out.println("Yearly savings goal set successfully!");
-
-                } else {
-
-                    // The user already has a yearly savings goal set
-                    System.out.println("You already have a yearly savings goal set.");
-                }
                 if (userResultSet.next()) {
+                    double savingsGoal = userResultSet.getDouble("savings_goal");
                     userName = userResultSet.getString("fullname");
-                    System.out.println("Welcome back, " + userName + "!");
+
+                    if (savingsGoal <= 0) {
+                        System.out.println("You haven't set a yearly savings goal yet.");
+                        System.out.println("Set your yearly savings goal now:");
+                        double yearlySavingsGoal = scanner.nextDouble();
+
+                        // Update the users savings goal in the db
+                        String checkSavingsGoalQuery = "UPDATE users SET savings_goal = ? WHERE user_id = ?";
+                        PreparedStatement updateStatement = connection.prepareStatement(checkSavingsGoalQuery);
+                        updateStatement.setDouble(1, yearlySavingsGoal);
+                        updateStatement.setInt(2, selectedUserId);
+                        updateStatement.executeUpdate();
+
+                        System.out.println("Yearly savings goal set successfully!");
 
                 } else {
-                    System.out.println("User not found");
+                    System.out.println("Welcome back, " + userName + "!");
+                    System.out.println("Your current yearly savings goal is: kr " + savingsGoal + ",-");
                 }
-
+            } else {
+                System.out.println("User not found");
+            }
                 // Let the user select which month it wants to fill in. Also get overview of what months are filled in.
                 try {
                     Map<Integer, String> filledMonths = new HashMap<>();
@@ -232,8 +224,8 @@ public class FinanceApp {
                             double extraIncome = incomeResultSet.getDouble("extra_income");
 
                             System.out.println("--- Existing income data for the selected month ---");
-                            System.out.println("Work Income: " + workIncome);
-                            System.out.println("Extra Income: " + extraIncome);
+                            System.out.println("Work Income: kr " + workIncome + ",-");
+                            System.out.println("Extra Income: kr " + extraIncome + ",-");
                         } else {
                             System.out.println("Error: No income data found for the selected month.");
                         }
