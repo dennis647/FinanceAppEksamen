@@ -90,6 +90,8 @@ class Savings {
 public class FinanceApp {
 
     private static String userName;
+    private static double workIncome = 0.0;
+    private static double extraIncome = 0.0;
     public static void main(String[] args) throws SQLException {
 
         // Connect to the database
@@ -164,20 +166,57 @@ public class FinanceApp {
                     System.out.println("Select a month (1-12):");
                     int selectedMonthNumber = scanner.nextInt();
 
-                    ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " +selectedMonthNumber);
+                    // Check if data is already filled in for the selected month
+                    boolean isFilled = filledMonths.containsKey(selectedMonthNumber) && filledMonths.get(selectedMonthNumber).equals("Filled in");
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+
+                    if (!isFilled) {
+                        System.out.println("Please enter your work income:");
+                        workIncome = scanner.nextDouble();
+
+                        System.out.println("Enter your extra income:");
+                        extraIncome = scanner.nextDouble();
+
+                        // Insert the written data into income table
+                        String insertQuery = "INSERT INTO income (user_id, month, work_income, extra_income) VALUES (?, ?, ?, ?)";
+                        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+                        preparedStatement.setInt(1, selectedUserId);
+                        preparedStatement.setString(2, "2023-" + String.format("%02d", selectedMonthNumber) + "-01"); // Here we are starting by just doing 1 year (2023)
+                        preparedStatement.setDouble(3, workIncome);
+                        preparedStatement.setDouble(4, extraIncome);
+
+                        int rowsAffected = preparedStatement.executeUpdate();
+                        if (rowsAffected > 0) {
+                            System.out.println("Income data has successfully been added!");
+                        } else {
+                            System.out.println("Failed to add income");
+                        }
+                    } else {
+                        System.out.println("Income data for the selected month already exists.");
+                        // Display existing income data for the selected month
+                        ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber);
+                        if (incomeResultSet.next()) {
+                            double workIncome = incomeResultSet.getDouble("work_income");
+                            double extraIncome = incomeResultSet.getDouble("extra_income");
+
+                            System.out.println("Existing income data for the selected month:");
+                            System.out.println("Work Income: " + workIncome);
+                            System.out.println("Extra Income: " + extraIncome);
+                        } else {
+                            System.out.println("No income data found for the selected month.");
+                        }
+                    }
+
+                        ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber);
+
+                    } catch(SQLException e){
+                        e.printStackTrace();
+                    }
+
             }
 
-            System.out.println("Please enter your work income:");
-            double workIncome = scanner.nextDouble();
 
-            System.out.println("Enter your freelance income:");
-            double freelanceIncome = scanner.nextDouble();
-
-            Income income = new Income(workIncome, freelanceIncome);
+            Income income = new Income(workIncome, extraIncome);
 
             System.out.println("Set your savings goal:");
             double savingsGoal = scanner.nextDouble();
