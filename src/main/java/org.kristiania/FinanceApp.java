@@ -71,7 +71,6 @@ public class FinanceApp {
     public static void main(String[] args) throws SQLException {
 
         // Connect to the database
-
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/financedb", "root", "toor");
             Statement statement = connection.createStatement();
@@ -137,9 +136,12 @@ public class FinanceApp {
 
                         System.out.println("Yearly savings goal set successfully!");
 
+
                 } else {
-                    System.out.println("Welcome back, " + userName + "!");
+                    System.out.println("\nWelcome back, " + userName + "!");
                     System.out.println("Your current yearly savings goal is: kr " + savingsGoal + ",-");
+                        System.out.println("Press any button to continue");
+                        scanner.next();
                 }
             } else {
                 System.out.println("User not found");
@@ -213,10 +215,7 @@ public class FinanceApp {
                     }
             }
 
-
             Income income = new Income(workIncome, extraIncome);
-
-
 
             Expenses expenses = new Expenses();
 
@@ -278,6 +277,7 @@ public class FinanceApp {
         }
     }
 
+    // To get all the months
     private static String getMonthName(int monthNumber) {
         return new DateFormatSymbols().getMonths()[monthNumber -1 ];
     }
