@@ -2,9 +2,8 @@ package org.kristiania;
 
 import javax.xml.transform.Result;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.text.DateFormatSymbols;
+import java.util.*;
 
 class personalInfo {
     private String name;
@@ -120,17 +119,17 @@ public class FinanceApp {
             } else if (isNewUser.equalsIgnoreCase("no")) {
                 // Display existing users
 
-            try {
+                try {
 
-                ResultSet existingUsers = statement.executeQuery("SELECT * FROM users");
+                    ResultSet existingUsers = statement.executeQuery("SELECT * FROM users");
 
-                System.out.println("--- Existing users ---");
-                while (existingUsers.next()) {
-                    System.out.println(existingUsers.getInt("user_id") + " : " + existingUsers.getString("fullname"));
+                    System.out.println("--- Existing users ---");
+                    while (existingUsers.next()) {
+                        System.out.println(existingUsers.getInt("user_id") + " : " + existingUsers.getString("fullname"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
                 // Choose the existing name
                 System.out.println("Please enter the ID number in front of your name");
@@ -143,6 +142,32 @@ public class FinanceApp {
                     System.out.println("Welcome back, " + userName + "!");
                 } else {
                     System.out.println("User not found");
+                }
+
+                // Let the user select which month it wants to fill in. Also get overview of what months are filled in.
+                try {
+                    Map<Integer, String> filledMonths = new HashMap<>();
+
+                    ResultSet filledMonthsResultSet = statement.executeQuery("SELECT DISTINCT MONTH(month) as month_number FROM income WHERE user_id = " + selectedUserId +
+                            " UNION SELECT DISTINCT MONTH(month) as month_number FROM expenses WHERE user_id = " + selectedUserId);
+
+                    while (filledMonthsResultSet.next()) {
+                        filledMonths.put(filledMonthsResultSet.getInt("month_number"), "Filled in");
+                    }
+
+                    System.out.println("Available months:");
+                    for (int i = 1; i <= 12; i++) {
+                        String monthName = getMonthName(i);
+                        String status = filledMonths.containsKey(i) ? filledMonths.get(i) : "Not filled in";
+                        System.out.println(i + ". " + monthName + " - " + status);
+                    }
+                    System.out.println("Select a month (1-12):");
+                    int selectedMonthNumber = scanner.nextInt();
+
+                    ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " +selectedMonthNumber);
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -217,5 +242,9 @@ public class FinanceApp {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String getMonthName(int monthNumber) {
+        return new DateFormatSymbols().getMonths()[monthNumber -1 ];
     }
 }
