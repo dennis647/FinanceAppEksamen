@@ -170,6 +170,7 @@ public class FinanceApp {
             ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
 
             while (true) {
+                if
                 System.out.println("Enter an expense description (Type done to break):");
                 String description = scanner.next();
                 if (description.equalsIgnoreCase("done")) break;
@@ -180,9 +181,14 @@ public class FinanceApp {
                 String category = categorizationServices.categoryExpenses(description);
 
                 expenses.addExpense(category, amount);
+
+                expenses.addExpense(category, amount);
+
+                //Insert the expenses into the database
+                insertExpenseData(connection, selectedUserId, selectedMonthNumber, category, amount);
             }
 
-
+/*
             double totalIncome = income.getTotalIncome();
             double totalExpenses = expenses.getTotalExpenses();
             double leftEachMonth = totalIncome - totalExpenses;
@@ -212,11 +218,11 @@ public class FinanceApp {
             int monthsToReachGoal = 0; //savings.monthsToReachGoal(monthlySaving); <- Insert how many months to reach savings goal
 
             if (monthsToReachGoal > 0) {
-                System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + /* Insert savingsGoal +*/ ",-");
-            } else {
+                System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + /* Insert savingsGoal +/ );
+            /*} else {
                 System.out.println("You won't reach your savings goal with the given savings amount.");
             }
-
+*/
             statement.close();
             connection.close();
             scanner.close();
@@ -309,6 +315,22 @@ public class FinanceApp {
             filledMonths.put(filledMonthsResultSet.getInt("month_number"), "Filled in");
         }
         return filledMonths;
+    }
+
+    private static void insertExpenseData(Connection connection, int selectedUserId, int selectedMonthNumber, String category, double amount) throws SQLException {
+        String insertQuery = "INSERT INTO expenses (user_id, month, category, amount) VALUES (?, ?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+        preparedStatement.setInt(1, selectedUserId);
+        preparedStatement.setString(2, "2023-" + String.format("%02d", selectedMonthNumber) + "-01");
+        preparedStatement.setString(3, category);
+        preparedStatement.setDouble(4, amount);
+
+        int rowsAffected = preparedStatement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Expense data has successfully been added!");
+        } else {
+            System.out.println("Error: Failed to add expense");
+        }
     }
 
     private static void displayAvailableMonths(Map<Integer, String> filledMonths) {
