@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Cleaned up">
+    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Added expenses into database - not correct">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -144,7 +145,13 @@
       <option name="presentableId" value="LOCAL−00014" />
       <updated>1702045242665</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL−00015" summary="Added expenses into database - not correct">
+      <created>1702046604165</created>
+      <option name="number" value="LOCAL−00015" />
+      <option name="presentableId" value="LOCAL−00015" />
+      <updated>1702046604165</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +183,7 @@
     <MESSAGE value="Removed some uneeded classes" />
     <MESSAGE value="small changes" />
     <MESSAGE value="Cleaned up" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up" />
+    <MESSAGE value="Added expenses into database - not correct" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added expenses into database - not correct" />
   </component>
 </project>

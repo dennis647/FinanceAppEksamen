@@ -105,7 +105,6 @@ public class FinanceApp {
                 // Insert the written data into income table
                 insertIncomeData(connection, selectedUserId, selectedMonthNumber, workIncome, extraIncome);
 
-
                 // If the user already exists
                     } else if (isNewUser.equalsIgnoreCase("no")) {
 
@@ -170,7 +169,7 @@ public class FinanceApp {
             ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
 
             while (true) {
-                if
+
                 System.out.println("Enter an expense description (Type done to break):");
                 String description = scanner.next();
                 if (description.equalsIgnoreCase("done")) break;
@@ -188,41 +187,6 @@ public class FinanceApp {
                 insertExpenseData(connection, selectedUserId, selectedMonthNumber, category, amount);
             }
 
-/*
-            double totalIncome = income.getTotalIncome();
-            double totalExpenses = expenses.getTotalExpenses();
-            double leftEachMonth = totalIncome - totalExpenses;
-
-            // Prints out the summary of all the data
-            System.out.println("\n--- Financial Helper Application ---");
-            System.out.println("Hello, " + userName + "!");
-            System.out.println("\n--- Summary ---");
-            System.out.println("Total Income: kr " + totalIncome + ",-");
-            System.out.println("Total Expenses: kr " + totalExpenses + ",-");
-            System.out.println("Amount Left Each Month: kr " + leftEachMonth + ",-");
-
-            System.out.println("\n--- Expense Summary ---");
-            for (Map.Entry<String, Double> entry : expenses.getCategories().entrySet()) {
-                System.out.println("Category: " + entry.getKey() + ", Total Amount: kr " + entry.getValue() + ",-");
-            }
-
-            System.out.println("\n--- Savings ---");
-            System.out.println("Current Savings: kr " +  ",-"); // Insert how much is currently saved here
-            System.out.println("Savings Goal: kr " +  ",-"); // Insert what the savings goal is
-
-            System.out.println("\n--- Savings Plan ---");
-            System.out.println("You have " + leftEachMonth + "kr left after all expenses");
-            System.out.println("Enter the amount you want to save each month:");
-            double monthlySaving = scanner.nextDouble();
-
-            int monthsToReachGoal = 0; //savings.monthsToReachGoal(monthlySaving); <- Insert how many months to reach savings goal
-
-            if (monthsToReachGoal > 0) {
-                System.out.println("If you save kr " + monthlySaving + ",- every month, it will take you approximately " + monthsToReachGoal + " months to reach your savings goal of kr" + /* Insert savingsGoal +/ );
-            /*} else {
-                System.out.println("You won't reach your savings goal with the given savings amount.");
-            }
-*/
             statement.close();
             connection.close();
             scanner.close();
@@ -244,10 +208,10 @@ public class FinanceApp {
             selectedMonthNumber = scanner.nextInt();
 
             // Check if data is already filled in for the selected month
-            boolean isFilled = filledMonths.containsKey(selectedMonthNumber) && filledMonths.get(selectedMonthNumber).equals("Filled in");
+            boolean isFilledIncome = filledMonths.containsKey(selectedMonthNumber) && filledMonths.get(selectedMonthNumber).equals("Filled in");
+            boolean isFilledExpenses = filledMonths.containsKey(selectedMonthNumber) && filledMonths.get(selectedMonthNumber).equals("Expenses filled");
 
-
-            if (!isFilled) {
+            if (!isFilledIncome && !isFilledExpenses) {
                 System.out.println("Please enter your work income:");
                 workIncome = scanner.nextDouble();
 
@@ -260,7 +224,8 @@ public class FinanceApp {
             } else {
 
                 // Display existing income data for the selected month
-                ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber);
+                ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber +
+                        " UNION SELECT * FROM expenses WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber);
                 if (incomeResultSet.next()) {
                     double workIncome = incomeResultSet.getDouble("work_income");
                     double extraIncome = incomeResultSet.getDouble("extra_income");
@@ -268,10 +233,34 @@ public class FinanceApp {
                     System.out.println("--- Existing income data for the selected month ---");
                     System.out.println("Work Income: kr " + workIncome + ",-");
                     System.out.println("Extra Income: kr " + extraIncome + ",-");
+
+                    //Get total expenses for that month
+                    ResultSet expensesResultSet = statement.executeQuery("SELECT SUM(amount) AS total_expenses FROM expenses WHERE user_id = " + selectedUserId +
+                            " AND MONTH(month) = " + selectedMonthNumber);
+                    if (expensesResultSet.next()) {
+                        double totalExpenses = expensesResultSet.getDouble("total_expenses");
+                        System.out.println("Total Expenses: kr " + totalExpenses + ",-");
+                    }
+                    System.out.println();
+
+                    System.out.println("Do you want to view detailed expenses for this month? (yes/no)");
+                    String viewExpensesOption = scanner.next();
+
+                    if (viewExpensesOption.equalsIgnoreCase("yes")) {
+                        ResultSet detailedExpensesResultSet = statement.executeQuery("SELECT * FROM expenses WHERE user_id = " + selectedUserId +
+                                " AND MONTH(month) = " + selectedMonthNumber);
+                        while (detailedExpensesResultSet.next()) {
+                            String expenseCategory = detailedExpensesResultSet.getString("category");
+                            double expenseAmount = detailedExpensesResultSet.getDouble("amount");
+
+                            System.out.println("Description: " + expenseCategory + ", Amount: kr " + expenseAmount + ",-");
+                        }
+                    }
                 } else {
                     System.out.println("Error: No income data found for the selected month.");
                 }
-            }
+
+                }
 
             ResultSet incomeResultSet = statement.executeQuery("SELECT * FROM income WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + selectedMonthNumber);
 
