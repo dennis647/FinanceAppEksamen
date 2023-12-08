@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Removed some uneeded classes">
+    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="small changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org.kristiania/ExpenseCategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/ExpenseCategoryService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +133,13 @@
       <option name="presentableId" value="LOCAL−00012" />
       <updated>1701879482261</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL−00013" summary="small changes">
+      <created>1701888049361</created>
+      <option name="number" value="LOCAL−00013" />
+      <option name="presentableId" value="LOCAL−00013" />
+      <updated>1701888049361</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,6 +169,7 @@
     <MESSAGE value="Experimenting a little, trying to add yearly savings goal" />
     <MESSAGE value="Added ability to add savings goal &amp; write new savings goal if not entered from before" />
     <MESSAGE value="Removed some uneeded classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed some uneeded classes" />
+    <MESSAGE value="small changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="small changes" />
   </component>
 </project>

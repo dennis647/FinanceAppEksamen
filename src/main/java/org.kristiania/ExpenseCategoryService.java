@@ -12,7 +12,7 @@ public class ExpenseCategoryService {
         } else if (description.toLowerCase().contains("bills") || description.toLowerCase().contains("electricity")) {
             return "Bills";
         } else {
-            return "Other";
+            return description;
         }
     }
 }
