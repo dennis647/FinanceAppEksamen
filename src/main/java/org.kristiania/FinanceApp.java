@@ -102,8 +102,6 @@ public class FinanceApp {
                 // Enter month selection
                 getMonths(connection, statement, scanner);
 
-                // Insert the written data into income table
-                insertIncomeData(connection, selectedUserId, selectedMonthNumber, workIncome, extraIncome);
 
                 // If the user already exists
                     } else if (isNewUser.equalsIgnoreCase("no")) {
@@ -124,6 +122,8 @@ public class FinanceApp {
                 // Choose the existing user ID
                 System.out.println("Please enter the ID number in front of your name");
                 selectedUserId = scanner.nextInt();
+
+                getMonths(connection, statement, scanner);
 
                 // Fetch user details with that name and use it further in the application
                 ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
@@ -158,34 +158,8 @@ public class FinanceApp {
                 }
             }
 
-            // Let the user select which month it wants to fill in. Also get overview of what months are filled in.
-            getMonths(connection, statement, scanner);
-
-
-            Income income = new Income(workIncome, extraIncome);
-
-            Expenses expenses = new Expenses();
-
-            ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
-
-            while (true) {
-
-                System.out.println("Enter an expense description (Type done to break):");
-                String description = scanner.next();
-                if (description.equalsIgnoreCase("done")) break;
-
-                System.out.println("Enter the expense amount:");
-                double amount = scanner.nextDouble();
-
-                String category = categorizationServices.categoryExpenses(description);
-
-                expenses.addExpense(category, amount);
-
-                expenses.addExpense(category, amount);
-
-                //Insert the expenses into the database
-                insertExpenseData(connection, selectedUserId, selectedMonthNumber, category, amount);
-            }
+             /*  // Let the user select which month it wants to fill in. Also get overview of what months are filled in.
+            getMonths(connection, statement, scanner);*/
 
             statement.close();
             connection.close();
@@ -196,6 +170,26 @@ public class FinanceApp {
         }
     }
 
+    private static void insertExpensesForNewUser(Connection connection, int selectedUserId, int selectedMonthNumber) throws SQLException {
+        Expenses expenses = new Expenses();
+        ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Enter an expense description (Type done to break):");
+            String description = scanner.next();
+            if (description.equalsIgnoreCase("done")) break;
+
+            System.out.println("Enter the expense amount:");
+            double amount = scanner.nextDouble();
+
+            String category = categorizationServices.categoryExpenses(description);
+            expenses.addExpense(category, amount);
+
+            // Insert the expenses into the database
+            insertExpenseData(connection, selectedUserId, selectedMonthNumber, category, amount);
+        }
+    }
 
 
     private static void getMonths(Connection connection, Statement statement, Scanner scanner) {
@@ -220,6 +214,8 @@ public class FinanceApp {
 
                 // Insert the written data into income table
                 insertIncomeData(connection, selectedUserId, selectedMonthNumber, workIncome, extraIncome);
+
+                insertExpensesForNewUser(connection, selectedUserId, selectedMonthNumber);
 
             } else {
 
