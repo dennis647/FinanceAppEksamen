@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Partially fixed expenses into the database">
+    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Fixed expenses being added to the database">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,7 +156,13 @@
       <option name="presentableId" value="LOCAL−00016" />
       <updated>1702047846623</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL−00017" summary="Fixed expenses being added to the database">
+      <created>1702049459596</created>
+      <option name="number" value="LOCAL−00017" />
+      <option name="presentableId" value="LOCAL−00017" />
+      <updated>1702049459596</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,6 +196,7 @@
     <MESSAGE value="Cleaned up" />
     <MESSAGE value="Added expenses into database - not correct" />
     <MESSAGE value="Partially fixed expenses into the database" />
-    <option name="LAST_COMMIT_MESSAGE" value="Partially fixed expenses into the database" />
+    <MESSAGE value="Fixed expenses being added to the database" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed expenses being added to the database" />
   </component>
 </project>
