@@ -123,7 +123,6 @@ public class FinanceApp {
                 System.out.println("Please enter the ID number in front of your name");
                 selectedUserId = scanner.nextInt();
 
-                getMonths(connection, statement, scanner);
 
                 // Fetch user details with that name and use it further in the application
                 ResultSet userResultSet = statement.executeQuery("SELECT * FROM users WHERE user_id = " + selectedUserId);
@@ -134,10 +133,9 @@ public class FinanceApp {
                     userName = userResultSet.getString("fullname");
 
                     if (savingsGoal <= 0) {
-                        System.out.println("You haven't set a yearly savings goal yet.");
+                        System.out.println("Hello, " + userName + "! You haven't set a yearly savings goal yet.");
                         System.out.println("Set your yearly savings goal now:");
-                        double yearlySavingsGoal = scanner.nextDouble();
-
+                        yearlySavingsGoal = scanner.nextDouble();
                         // Update the users savings goal in the db
                         String checkSavingsGoalQuery = "UPDATE users SET savings_goal = ? WHERE user_id = ?";
                         PreparedStatement updateStatement = connection.prepareStatement(checkSavingsGoalQuery);
@@ -148,10 +146,14 @@ public class FinanceApp {
                         System.out.println("Yearly savings goal set successfully!");
 
                     } else {
+
+                        System.out.println("Welcome back, " + userName + "! \nYour set yearly savings goal is: kr " + yearlySavingsGoal + ",- (Enter anything to continue)");
+                        scanner.next();
                         getMonths(connection, statement, scanner);
                     }
                 } else {
                     System.out.println("User not found");
+                    main(args);
                 }
             }
 
@@ -176,6 +178,7 @@ public class FinanceApp {
     private static int selectedMonthNumber = 0;
     private static double incomeLeft = 0.0;
     private static double selectedMonthSave = 0.0;
+    private static double yearlySavingsGoal;
 
 
     private static void getMonths(Connection connection, Statement statement, Scanner scanner) {
@@ -191,7 +194,7 @@ public class FinanceApp {
             boolean isFilledIncome = filledMonths.containsKey(selectedMonthNumber) && filledMonths.get(selectedMonthNumber).equals("Filled in");
             boolean isFilledExpenses = filledMonths.containsKey(selectedMonthNumber) && filledMonths.get(selectedMonthNumber).equals("Expenses filled");
 
-            if (!isFilledIncome && !isFilledExpenses) {
+            if (!isFilledIncome && !isFilledExpenses && selectedMonthNumber <= 12) {
                 System.out.println("Please enter your work income:");
                 workIncome = scanner.nextDouble();
 
@@ -236,6 +239,9 @@ public class FinanceApp {
 
                     incomeLeft = ((workIncome + extraIncome) - totalExpenses) - monthSavings;
                     System.out.println("Money left: kr " + incomeLeft + ",-");
+                    System.out.println("\n--- Saved so far ---");
+                    System.out.println("So far you have saved kr " + monthSavings + ",- out of your goal: kr " + yearlySavingsGoal + ",-");
+                    scanner.next();
 
                     System.out.println("Do you want to view a detailed overview of expenses for this month? (yes/no)");
                     String viewExpensesOption = scanner.next();
@@ -264,6 +270,8 @@ public class FinanceApp {
                                 getMonths(connection, statement, scanner);
 
                         }
+                    } else if (viewExpensesOption.equalsIgnoreCase("no")) {
+                        getMonths(connection, statement, scanner);
                     }
                 } else {
                     System.out.println("Error: No income data found for the selected month.");
@@ -301,6 +309,8 @@ public class FinanceApp {
         ExpenseCategoryService categorizationServices = new ExpenseCategoryService();
         Scanner scanner = new Scanner(System.in);
 
+        incomeLeft = 0.0;
+
         while (true) {
             System.out.println("Enter an expense description (Type done to break):");
             String description = scanner.next();
@@ -322,6 +332,7 @@ public class FinanceApp {
         System.out.println("Left of income after expenses: kr " + incomeLeft + ",-");
         System.out.println("How much would you like to put towards your savings goal?");
         selectedMonthSave = scanner.nextDouble();
+
 
         incomeLeft = incomeLeft - selectedMonthSave;
         insertMonthlySavings(connection, selectedUserId, selectedMonthNumber, selectedMonthSave);
