@@ -257,12 +257,17 @@ public class FinanceApp {
                             System.out.println("Description: " + expenseCategory + ", Amount: kr " + expenseAmount + ",-");
                         }
 
-                            System.out.println("\nDo you want some financial advice? (yes/no) (no to go back to overview");
+                            System.out.println("\nDo you want some financial advice? (yes/no) (no to go back to overview)");
                             String savingsAdv = scanner.next();
 
+                            // Gives the financial advice
                             if (savingsAdv.equalsIgnoreCase("yes")) {
+                                    ResultSet FinanceAdvResultSet = statement.executeQuery("SELECT * FROM expenses WHERE user_id = " + selectedUserId +
+                                            " AND MONTH(month) = " + selectedMonthNumber);
+                                FinancialAdviceService.provideAdvice(FinanceAdvResultSet);
 
-                                // give saving advice
+                                } else if (viewExpensesOption.equalsIgnoreCase("no")) {
+                                    getMonths(connection, statement, scanner);
 
                             }
                             else if (savingsAdv.equalsIgnoreCase("no")) {
