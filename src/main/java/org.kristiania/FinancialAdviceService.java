@@ -27,6 +27,11 @@ public class FinancialAdviceService {
                 System.out.println("Spending a lot on cigarettes may not be the best use of your funds. Amount: kr " + entry.getValue());
                 isBadPurchase = true;
             }
+            if (entry.getKey().equalsIgnoreCase("alcohol") || entry.getKey().equalsIgnoreCase("beer") || entry.getKey().equalsIgnoreCase("vodka")
+                    && entry.getValue() > 1500) {
+                System.out.println("You've been spending a lot on alcohol. Amount: kr " + entry.getValue());
+                isBadPurchase = true;
+            }
         }
 
             if (!isBadPurchase) {

@@ -243,7 +243,7 @@ public class FinanceApp {
                         System.out.println("Total Expenses: kr " + totalExpenses + ",-");
                     }
 
-                    ResultSet savingsResultSet = statement.executeQuery("SELECT * FROM user_savings WHERE user_id = " + selectedUserId + " AND month = "
+                    ResultSet savingsResultSet = statement.executeQuery("SELECT * FROM user_savings WHERE user_id = " + selectedUserId + " AND MONTH(month) = "
                             + selectedMonthNumber);
 
                     if (savingsResultSet.next()) {
@@ -307,7 +307,7 @@ public class FinanceApp {
         }
     }
 
-    // Displays the yearly overview
+    // Displays the yearly overview - but savings doesn't work.
     private static void getYearlyOverview(Connection connection, Statement statement, Scanner scanner) throws SQLException {
         double totalIncome = 0.0;
         double totalExpenses = 0.0;
@@ -320,9 +320,10 @@ public class FinanceApp {
                                 " UNION ALL " +
                                 "SELECT NULL, NULL, amount, NULL FROM expenses WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + i +
                                 " UNION ALL " +
-                                "SELECT NULL, NULL, NULL, amount_saved FROM user_savings WHERE user_id = " + selectedUserId + " AND month = " + i);
+                                "SELECT NULL, NULL, NULL, amount_saved FROM user_savings WHERE user_id = " + selectedUserId + " AND MONTH(month) = " + i);
 
-                    double monthIncome = 0.0;
+
+                double monthIncome = 0.0;
                     double monthExpenses = 0.0;
                     double monthSavings = 0.0;
 
@@ -443,12 +444,11 @@ public class FinanceApp {
 
     // Inserts monthly savings into the database
     private static void insertMonthlySavings(Connection connection, int selectedUserId, int selectedMonthNumber, double amountSaved) throws SQLException {
-        String insertQuery = "INSERT INTO user_savings (user_id, month, year, amount_saved) VALUES (?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO user_savings (user_id, month, amount_saved) VALUES (?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
         preparedStatement.setInt(1, selectedUserId);
-        preparedStatement.setInt(2, selectedMonthNumber);
-        preparedStatement.setInt(3, 2023); // Assuming the year is 2023
-        preparedStatement.setDouble(4, amountSaved);
+        preparedStatement.setString(2, "2023-" + String.format("%02d", selectedMonthNumber) + "-01");
+        preparedStatement.setDouble(3, amountSaved);
 
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected > 0) {

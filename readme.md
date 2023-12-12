@@ -14,13 +14,13 @@ PRIMARY KEY (`user_id`)
 CREATE TABLE `user_savings` (
 `savings_id` int(11) NOT NULL AUTO_INCREMENT,
 `user_id` int(11) NOT NULL,
-`month` int(11) NOT NULL,
-`year` int(11) NOT NULL,
+`month` date DEFAULT NULL,
 `amount_saved` decimal(10,2) NOT NULL,
 PRIMARY KEY (`savings_id`),
 KEY `user_id` (`user_id`),
 CONSTRAINT `user_savings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 CREATE TABLE `income` (
 `income_id` int(11) NOT NULL AUTO_INCREMENT,
