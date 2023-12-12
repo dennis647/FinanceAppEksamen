@@ -192,7 +192,7 @@ public class FinanceApp {
             displayAvailableMonths(filledMonths);
 
             System.out.println("\n15. Overview of the entire year");
-            System.out.println("\nSelect a month (1-12) or select (Overview):");
+            System.out.println("\nSelect a month (1-12) or select (15):");
             selectedMonthNumber = scanner.nextInt();
 
             // Check if data is already filled in for the selected month
