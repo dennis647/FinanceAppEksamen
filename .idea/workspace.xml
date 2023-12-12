@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Added an financial advice service">
+    <list default="true" id="5d0066a4-eeb9-494a-858c-d7c8d05ad6fe" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org.kristiania/FinanceApp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +61,7 @@
       <workItem from="1701701161397" duration="7493000" />
       <workItem from="1701709630803" duration="5313000" />
       <workItem from="1701864996208" duration="7672000" />
-      <workItem from="1702301103627" duration="11750000" />
+      <workItem from="1702301103627" duration="12973000" />
     </task>
     <task id="LOCAL−00001" summary="Added basic layout">
       <created>1701702140321</created>
@@ -182,7 +183,13 @@
       <option name="presentableId" value="LOCAL−00020" />
       <updated>1702311655610</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL−00021" summary="Changes">
+      <created>1702388749557</created>
+      <option name="number" value="LOCAL−00021" />
+      <option name="presentableId" value="LOCAL−00021" />
+      <updated>1702388749557</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,6 +227,7 @@
     <MESSAGE value="Added monthly savings" />
     <MESSAGE value="Working on adding monthly savings options" />
     <MESSAGE value="Added an financial advice service" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added an financial advice service" />
+    <MESSAGE value="Changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes" />
   </component>
 </project>

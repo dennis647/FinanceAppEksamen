@@ -129,13 +129,16 @@ public class FinanceApp {
 
                 // Check if the user has a yearly savings goal set
                 if (userResultSet.next()) {
-                    double savingsGoal = userResultSet.getDouble("savings_goal");
+                    savingsGoal = userResultSet.getDouble("savings_goal");
                     userName = userResultSet.getString("fullname");
+
+
 
                     if (savingsGoal <= 0) {
                         System.out.println("Hello, " + userName + "! You haven't set a yearly savings goal yet.");
                         System.out.println("Set your yearly savings goal now:");
                         yearlySavingsGoal = scanner.nextDouble();
+
                         // Update the users savings goal in the db
                         String checkSavingsGoalQuery = "UPDATE users SET savings_goal = ? WHERE user_id = ?";
                         PreparedStatement updateStatement = connection.prepareStatement(checkSavingsGoalQuery);
@@ -149,6 +152,7 @@ public class FinanceApp {
 
                     } else {
 
+                        yearlySavingsGoal = savingsGoal;
                         System.out.println("Welcome back, " + userName + "! \nYour set yearly savings goal is: kr " + yearlySavingsGoal + ",- (Enter anything to continue)");
                         scanner.next();
                         getMonths(connection, statement, scanner);
@@ -158,9 +162,6 @@ public class FinanceApp {
                     main(args);
                 }
             }
-
-             /*  // Let the user select which month it wants to fill in. Also get overview of what months are filled in.
-            getMonths(connection, statement, scanner);*/
 
             statement.close();
             connection.close();
@@ -175,7 +176,7 @@ public class FinanceApp {
     private static String userName;
     private static double workIncome = 0.0;
     private static double extraIncome = 0.0;
-    private static double savingsGoal = 0.0;
+    private static double savingsGoal;
     private static int selectedUserId = 0;
     private static int selectedMonthNumber = 0;
     private static double incomeLeft = 0.0;
@@ -277,15 +278,16 @@ public class FinanceApp {
                                 scanner.next();
                                 getMonths(connection, statement, scanner);
 
-                                } else if (viewExpensesOption.equalsIgnoreCase("no")) {
+                                } else if (savingsAdv.equalsIgnoreCase("no")) {
+                                getMonths(connection, statement, scanner);
+
+                            }
+
+                            else if (viewExpensesOption.equalsIgnoreCase("no")) {
                                     getMonths(connection, statement, scanner);
 
                             }
-                            else if (savingsAdv.equalsIgnoreCase("no")) {
 
-                                getMonths(connection, statement, scanner);
-
-                        }
                     } else if (viewExpensesOption.equalsIgnoreCase("no")) {
                         getMonths(connection, statement, scanner);
                     }
