@@ -145,6 +145,8 @@ public class FinanceApp {
 
                         System.out.println("Yearly savings goal set successfully!");
 
+                        getMonths(connection, statement, scanner);
+
                     } else {
 
                         System.out.println("Welcome back, " + userName + "! \nYour set yearly savings goal is: kr " + yearlySavingsGoal + ",- (Enter anything to continue)");
@@ -204,6 +206,11 @@ public class FinanceApp {
                 // Insert the written data into income table
                 insertIncomeData(connection, selectedUserId, selectedMonthNumber, workIncome, extraIncome);
                 insertExpensesForNewUser(connection, selectedUserId, selectedMonthNumber);
+
+                System.out.println("Enter anything to continue");
+                scanner.next();
+
+                getMonths(connection, statement, scanner);
 
             } else {
                 // Display existing income data for the selected month
@@ -265,6 +272,10 @@ public class FinanceApp {
                                     ResultSet FinanceAdvResultSet = statement.executeQuery("SELECT * FROM expenses WHERE user_id = " + selectedUserId +
                                             " AND MONTH(month) = " + selectedMonthNumber);
                                 FinancialAdviceService.provideAdvice(FinanceAdvResultSet);
+
+                                System.out.println("\nType anything to return to monthly overview");
+                                scanner.next();
+                                getMonths(connection, statement, scanner);
 
                                 } else if (viewExpensesOption.equalsIgnoreCase("no")) {
                                     getMonths(connection, statement, scanner);
@@ -341,6 +352,9 @@ public class FinanceApp {
 
         incomeLeft = incomeLeft - selectedMonthSave;
         insertMonthlySavings(connection, selectedUserId, selectedMonthNumber, selectedMonthSave);
+
+
+
     }
 
     // For showing all the months
@@ -384,6 +398,9 @@ public class FinanceApp {
         int rowsAffected = preparedStatement.executeUpdate();
         if (rowsAffected > 0) {
             System.out.println("Savings data has successfully been added!");
+
+
+
         } else {
             System.out.println("Error: Failed to add savings data");
         }
