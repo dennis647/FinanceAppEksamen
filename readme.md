@@ -2,6 +2,10 @@ Kandidatnr: 2022
 
 Password for mySql database "toor"
 
+Needed to create a new project for spring boot:
+
+https://github.com/dennis647/springboot-financeAppExam
+
 If needed to create tables yourself, these are the create statements:
 
 CREATE TABLE `users` (
